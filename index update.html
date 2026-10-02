@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduLearn - Học Mọi Lúc, Tiến Bộ Mỗi Ngày</title>
+
+    <!-- Thư viện Tailwind CSS & FontAwesome & Google Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+    <!-- Toast Thông Báo -->
+    <div id="toast" class="fixed top-20 right-5 z-50 transform translate-x-full opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-green-400 text-lg"></i>
+        <span id="toastMessage" class="text-sm font-medium">Thông báo</span>
+    </div>
+
+    <!-- =========================================================
+         THANH HEADER CHUNG
+         ========================================================= -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+
+            <div class="flex items-center gap-8">
+                <a href="#" onclick="showPage('homePage')" class="flex items-center gap-2.5 font-bold text-2xl text-blue-600">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center font-black shadow-md shadow-blue-500/30">
+                        EL
+                    </div>
+                    <span class="text-slate-900">Edu<span class="text-blue-600">Learn</span></span>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-6 font-medium text-slate-600 text-sm">
+                    <button onclick="showPage('homePage')" class="hover:text-blue-600 font-semibold transition">Trang chủ</button>
+                    <button onclick="openCoursePage('math10')" class="hover:text-blue-600 transition">Toán 10</button>
+                    <button onclick="openCoursePage('math11')" class="hover:text-blue-600 transition">Toán 11</button>
+                    <button onclick="openCoursePage('math12')" class="hover:text-blue-600 transition">Toán 12</button>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div id="authButtons" class="flex items-center gap-2">
+                    <button onclick="openLoginModal()" class="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-blue-600 transition">Đăng nhập</button>
+                    <button onclick="openRegisterModal()" class="px-5 py-2 text-sm font-semibold bg-blue-600 text-white rounded-full hover:bg-blue-700 transition shadow-md shadow-blue-500/20">Đăng ký</button>
+                </div>
+
+                <div id="userInfo" class="hidden flex items-center gap-3 border-l border-slate-200 pl-4">
+                    <div id="userAvatar" class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-md">
+                        U
+                    </div>
+                    <span id="userNameDisplay" class="text-sm font-semibold text-slate-800 hidden lg:inline">Học Viên</span>
+                    <button onclick="handleLogout()" title="Đăng xuất" class="p-2 text-slate-400 hover:text-red-600 transition rounded-lg hover:bg-slate-100">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- =========================================================
+         [VIEW 1]: TRANG CHỦ (HOME PAGE)
+         ========================================================= -->
+    <main id="homePage" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
+
+        <!-- Banner Giới thiệu -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+            <div class="lg:col-span-7 space-y-6">
+                <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100">
+                    <i class="fa-solid fa-graduation-cap"></i> Hệ thống học tập số 4.0
+                </span>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight">
+                    Học mọi lúc.<br>
+                    <span class="text-blue-600">Tiến bộ mỗi ngày.</span>
+                </h1>
+
+                <p class="text-base sm:text-lg text-slate-600 max-w-xl">
+                    Học bằng video, tài liệu tóm tắt và bài tập tương tác — bám sát chương trình THPT, củng cố kiến thức vững chắc.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4 pt-2">
+                    <a href="#courses" class="px-7 py-3.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition">
+                        Khám phá khóa học
+                    </a>
+                </div>
+            </div>
+
+            <!-- Khung Tiến độ -->
+            <div class="lg:col-span-5">
+                <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-blue-600"></i> Tiến độ học tập
+                        </h3>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold text-slate-700">
+                                <span>Toán 12 - Ôn Thi THPT</span>
+                                <span id="percentMath12" class="text-blue-600 font-bold">0%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div id="barMath12" class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold text-slate-700">
+                                <span>Toán 11 - Hình Học Không Gian</span>
+                                <span id="percentMath11" class="text-cyan-600 font-bold">0%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div id="barMath11" class="bg-cyan-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold text-slate-700">
+                                <span>Toán 10 - Đại Số & Lượng Giác</span>
+                                <span id="percentMath10" class="text-indigo-600 font-bold">0%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div id="barMath10" class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 flex items-center gap-3 text-xs sm:text-sm text-slate-600 bg-slate-50 p-3.5 rounded-2xl">
+                        <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold shrink-0">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <div id="welcomeUserName">
+                            Chào bạn! Hãy đăng nhập để lưu giữ tiến độ bài học.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Danh sách khóa học -->
+        <section id="courses" class="space-y-8 pt-6">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Khóa học nổi bật</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Thẻ Toán 12 -->
+                <div onclick="openCoursePage('math12')" class="cursor-pointer bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl transition flex flex-col group">
+                    <div class="h-44 bg-blue-600 flex items-center justify-center text-white relative">
+                        <i class="fa-solid fa-square-root-variable text-5xl group-hover:scale-110 transition duration-300"></i>
+                        <span class="absolute top-4 left-4 bg-white/90 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">Toán Lớp 12</span>
+                    </div>
+                    <div class="p-6 space-y-3 flex-grow flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition">Toán Giải Tích 12 - Ôn Thi THPT Quốc Gia</h3>
+                            <p class="text-slate-600 text-sm line-clamp-2">Nắm vững Đạo hàm, Tích phân và các dạng toán vận dụng cao.</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
+                            <span class="text-lg font-extrabold text-blue-600">Miễn phí</span>
+                            <span class="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-sm font-semibold group-hover:bg-blue-600 group-hover:text-white transition">Vào học ngay →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thẻ Toán 11 -->
+                <div onclick="openCoursePage('math11')" class="cursor-pointer bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl transition flex flex-col group">
+                    <div class="h-44 bg-cyan-600 flex items-center justify-center text-white relative">
+                        <i class="fa-solid fa-shapes text-5xl group-hover:scale-110 transition duration-300"></i>
+                        <span class="absolute top-4 left-4 bg-white/90 text-cyan-700 text-xs font-bold px-3 py-1 rounded-full">Toán Lớp 11</span>
+                    </div>
+                    <div class="p-6 space-y-3 flex-grow flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <h3 class="text-lg font-bold text-slate-800 group-hover:text-cyan-600 transition">Hình Học Không Gian - Chinh Phục Điểm 9+</h3>
+                            <p class="text-slate-600 text-sm line-clamp-2">Phương pháp giải nhanh góc, khoảng cách và thể tích khối đa diện.</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
+                            <span class="text-lg font-extrabold text-blue-600">Miễn phí</span>
+                            <span class="px-4 py-2 bg-cyan-50 text-cyan-600 rounded-xl text-sm font-semibold group-hover:bg-cyan-600 group-hover:text-white transition">Vào học ngay →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thẻ Toán 10 -->
+                <div onclick="openCoursePage('math10')" class="cursor-pointer bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl transition flex flex-col group">
+                    <div class="h-44 bg-indigo-600 flex items-center justify-center text-white relative">
+                        <i class="fa-solid fa-calculator text-5xl group-hover:scale-110 transition duration-300"></i>
+                        <span class="absolute top-4 left-4 bg-white/90 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full">Toán Lớp 10</span>
+                    </div>
+                    <div class="p-6 space-y-3 flex-grow flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <h3 class="text-lg font-bold text-slate-800 group-hover:text-indigo-600 transition">Đại Số & Lượng Giác Cơ Bản Đến Nâng Cao</h3>
+                            <p class="text-slate-600 text-sm line-clamp-2">Hệ thống công thức Lượng giác, Phương trình và Bất phương trình nền tảng.</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
+                            <span class="text-lg font-extrabold text-blue-600">Miễn phí</span>
+                            <span class="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-sm font-semibold group-hover:bg-indigo-600 group-hover:text-white transition">Vào học ngay →</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =========================================================
+         [VIEW 2]: TRANG XEM & TẢI VIDEO BÀI GIẢNG (LESSON PAGE)
+         ========================================================= -->
+    <main id="lessonPage" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+        
+        <!-- Nút Quay lại -->
+        <button onclick="showPage('homePage')" class="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition">
+            <i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ
+        </button>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Cột trái: Trình phát Video & Upload -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Player -->
+                <div class="bg-black rounded-3xl overflow-hidden shadow-2xl aspect-video flex items-center justify-center relative">
+                    <video id="videoPlayer" class="w-full h-full hidden" controls>
+                        Trình duyệt không hỗ trợ phát video.
+                    </video>
+                    <div id="videoPlaceholder" class="text-slate-400 text-center p-6 space-y-2">
+                        <i class="fa-solid fa-circle-play text-6xl opacity-50"></i>
+                        <p class="text-sm font-medium">Chưa có bài giảng được chọn. Vui lòng chọn bên phải hoặc tải video mới lên bên dưới.</p>
+                    </div>
+                </div>
+
+                <!-- Tiêu đề bài giảng hiện tại -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+                    <span id="courseBadge" class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">Khóa học</span>
+                    <h1 id="currentVideoTitle" class="text-2xl font-extrabold text-slate-900 pt-2">Vui lòng chọn bài giảng</h1>
+                </div>
+
+                <!-- Form Tải Video từ máy -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up text-blue-600"></i> Tải video bài giảng mới lên
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Tên bài giảng</label>
+                            <input type="text" id="uploadTitle" placeholder="Ví dụ: Bài 2 - Cực trị của hàm số" 
+                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 focus:bg-white transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Chọn file Video từ máy tính (.mp4, .webm...)</label>
+                            <input type="file" id="videoFileInput" accept="video/*"
+                                class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl">
+                        </div>
+                        <button onclick="handleUploadVideo()" class="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-500/20 text-sm">
+                            Thêm bài giảng & Phát ngay
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Cột phải: Danh sách bài giảng -->
+            <div class="lg:col-span-4">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 sticky top-24">
+                    <h3 class="font-bold text-slate-900 text-lg flex items-center justify-between border-b border-slate-100 pb-3">
+                        <span><i class="fa-solid fa-list-check text-blue-600 mr-2"></i> Danh sách bài học</span>
+                    </h3>
+
+                    <div id="playlist" class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                        <!-- Danh sách bài giảng render bằng JS -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-20 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm space-y-1">
+            <p>© 2026 EduLearn. Trang web học tập môn Toán trực tuyến.</p>
+            <p>Founder & Developer: <span class="font-bold text-slate-800">Nguyễn Hòa Quân & Nguyễn Tấn Phát</span> <span class="font-medium text-slate-600">(Lớp 12A6)</span></p>
+        </div>
+    </footer>
+
+    <!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <div id="loginModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-6">
+            <button onclick="closeLoginModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 w-9 h-9 rounded-full hover:bg-slate-100 flex items-center justify-center text-xl transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto text-xl font-bold">EL</div>
+                <h3 class="text-2xl font-extrabold text-slate-900">Đăng Nhập EduLearn</h3>
+            </div>
+            <form class="space-y-4" onsubmit="handleLogin(event)">
+                <input type="text" id="loginUsername" placeholder="Tên đăng nhập / Email" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none">
+                <input type="password" placeholder="Mật khẩu" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none">
+                <button type="submit" class="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition text-sm">Đăng Nhập</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="registerModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-5">
+            <button onclick="closeRegisterModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 w-9 h-9 rounded-full hover:bg-slate-100 flex items-center justify-center text-xl transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mx-auto text-xl font-bold">EL</div>
+                <h3 class="text-2xl font-extrabold text-slate-900">Tạo Tài Khoản</h3>
+            </div>
+            <form class="space-y-3" onsubmit="handleRegister(event)">
+                <input type="text" id="regFullName" placeholder="Họ và tên" required class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none">
+                <input type="email" placeholder="Email" required class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none">
+                <input type="password" placeholder="Mật khẩu" required class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none">
+                <button type="submit" class="w-full py-3 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-800 transition text-sm">Đăng Ký</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         JAVASCRIPT LOGIC
+         ========================================================= -->
+    <script>
+        // Dữ liệu danh sách khóa học
+        const coursesData = {
+            math12: { name: "Toán Lớp 12", badge: "Khóa học Toán 12", key: "math12" },
+            math11: { name: "Toán Lớp 11", badge: "Khóa học Toán 11", key: "math11" },
+            math10: { name: "Toán Lớp 10", badge: "Khóa học Toán 10", key: "math10" }
+        };
+
+        // Lưu danh sách bài học theo môn
+        let currentCourseKey = 'math12';
+        let lessonsStore = {
+            math12: [
+                { id: 1, title: "Bài 1: Khảo sát sự biến thiên & Đồ thị hàm số", src: "" }
+            ],
+            math11: [
+                { id: 1, title: "Bài 1: Phép quay & Phép dời hình trong mặt phẳng", src: "" }
+            ],
+            math10: [
+                { id: 1, title: "Bài 1: Mệnh đề & Tập hợp cơ bản", src: "" }
+            ]
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+            checkUserState();
+        });
+
+        // Chuyển trang
+        function showPage(pageId) {
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('lessonPage').classList.add('hidden');
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Mở trang bài giảng chi tiết
+        function openCoursePage(courseKey) {
+            currentCourseKey = courseKey;
+            const course = coursesData[courseKey];
+            document.getElementById('courseBadge').innerText = course.badge;
+
+            showPage('lessonPage');
+            renderPlaylist();
+
+            // Chọn bài đầu tiên nếu có
+            const lessons = lessonsStore[currentCourseKey];
+            if (lessons.length > 0) {
+                playVideo(lessons[0]);
+            }
+        }
+
+        // Render Playlist
+        function renderPlaylist() {
+            const playlist = document.getElementById('playlist');
+            playlist.innerHTML = '';
+            const lessons = lessonsStore[currentCourseKey] || [];
+
+            if (lessons.length === 0) {
+                playlist.innerHTML = '<p class="text-xs text-slate-400 py-4 text-center">Chưa có bài học nào. Hãy tải video lên!</p>';
+                return;
+            }
+
+            lessons.forEach((item) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl border border-slate-100 hover:bg-blue-50 hover:border-blue-200 transition flex items-center justify-between gap-3 text-sm font-medium text-slate-700";
+                btn.onclick = () => playVideo(item);
+                btn.innerHTML = `
+                    <span class="line-clamp-1"><i class="fa-solid fa-play-circle text-blue-600 mr-2"></i> ${item.title}</span>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+                `;
+                playlist.appendChild(btn);
+            });
+        }
+
+        // Phát Video
+        function playVideo(lesson) {
+            const player = document.getElementById('videoPlayer');
+            const placeholder = document.getElementById('videoPlaceholder');
+            const title = document.getElementById('currentVideoTitle');
+
+            title.innerText = lesson.title;
+
+            if (lesson.src) {
+                player.src = lesson.src;
+                player.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+                player.play();
+
+                // Cộng tiến độ bài học
+                addProgress(currentCourseKey, 10);
+            } else {
+                player.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                showToast("Bài học này chưa có file video! Vui lòng tải video bên dưới.");
+            }
+        }
+
+        // Xử lý Upload Video từ máy tính
+        function handleUploadVideo() {
+            const titleInput = document.getElementById('uploadTitle').value.trim();
+            const fileInput = document.getElementById('videoFileInput');
+
+            if (!titleInput) {
+                showToast("⚠️ Vui lòng nhập tên bài giảng!");
+                return;
+            }
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                showToast("⚠️ Vui lòng chọn 1 file video từ máy tính!");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const fileURL = URL.createObjectURL(file);
+
+            const newLesson = {
+                id: Date.now(),
+                title: titleInput,
+                src: fileURL
+            };
+
+            lessonsStore[currentCourseKey].push(newLesson);
+            renderPlaylist();
+            playVideo(newLesson);
+
+            document.getElementById('uploadTitle').value = '';
+            fileInput.value = '';
+
+            showToast("🎉 Tải bài giảng video lên thành công!");
+        }
+
+        // Cập nhật Tiến độ (% Tiến trình)
+        function renderProgressUI() {
+            const savedUser = JSON.parse(localStorage.getItem('eduMathUser'));
+            let progress = { math12: 0, math11: 0, math10: 0 };
+
+            if (savedUser && savedUser.progress) {
+                progress = savedUser.progress;
+            }
+
+            document.getElementById('percentMath12').innerText = (progress.math12 || 0) + '%';
+            document.getElementById('barMath12').style.width = (progress.math12 || 0) + '%';
+
+            document.getElementById('percentMath11').innerText = (progress.math11 || 0) + '%';
+            document.getElementById('barMath11').style.width = (progress.math11 || 0) + '%';
+
+            document.getElementById('percentMath10').innerText = (progress.math10 || 0) + '%';
+            document.getElementById('barMath10').style.width = (progress.math10 || 0) + '%';
+        }
+
+        function addProgress(courseKey, percentToAdd) {
+            let savedUser = JSON.parse(localStorage.getItem('eduMathUser'));
+            if (!savedUser) return;
+
+            if (!savedUser.progress) savedUser.progress = { math12: 0, math11: 0, math10: 0 };
+            savedUser.progress[courseKey] = Math.min(100, (savedUser.progress[courseKey] || 0) + percentToAdd);
+
+            localStorage.setItem('eduMathUser', JSON.stringify(savedUser));
+            renderProgressUI();
+        }
+
+        // Quản lý Đăng nhập / Đăng ký
+        function checkUserState() {
+            const savedUser = JSON.parse(localStorage.getItem('eduMathUser'));
+            const authButtons = document.getElementById('authButtons');
+            const userInfo = document.getElementById('userInfo');
+            const welcomeText = document.getElementById('welcomeUserName');
+
+            if (savedUser) {
+                if (authButtons) authButtons.classList.add('hidden');
+                if (userInfo) userInfo.classList.remove('hidden');
+
+                document.getElementById('userNameDisplay').innerText = savedUser.name;
+                document.getElementById('userAvatar').innerText = savedUser.name.charAt(0).toUpperCase();
+
+                if (welcomeText) {
+                    welcomeText.innerHTML = `<strong>Chào ${savedUser.name}!</strong> Tiến độ học tập của bạn đang được ghi nhận tự động.`;
+                }
+            } else {
+                if (authButtons) authButtons.classList.remove('hidden');
+                if (userInfo) userInfo.classList.add('hidden');
+                if (welcomeText) {
+                    welcomeText.innerText = "Chào bạn! Hãy đăng nhập để lưu giữ tiến độ bài học.";
+                }
+            }
+
+            renderProgressUI();
+        }
+
+        function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
+        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+        function openRegisterModal() { document.getElementById('registerModal').classList.remove('hidden'); }
+        function closeRegisterModal() { document.getElementById('registerModal').classList.add('hidden'); }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const usernameInput = document.getElementById('loginUsername').value;
+            const nameFromEmail = usernameInput.includes('@') ? usernameInput.split('@')[0] : usernameInput;
+            const userData = { name: nameFromEmail || "Học Viên", progress: { math12: 0, math11: 0, math10: 0 } };
+
+            localStorage.setItem('eduMathUser', JSON.stringify(userData));
+            closeLoginModal();
+            checkUserState();
+            showToast(`🎉 Chào mừng ${userData.name} quay trở lại!`);
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const fullName = document.getElementById('regFullName').value;
+            const userData = { name: fullName, progress: { math12: 0, math11: 0, math10: 0 } };
+
+            localStorage.setItem('eduMathUser', JSON.stringify(userData));
+            closeRegisterModal();
+            checkUserState();
+            showToast(`🎉 Đăng ký thành công! Chào mừng ${fullName}.`);
+        }
+
+        function handleLogout() {
+            if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+                localStorage.removeItem('eduMathUser');
+                checkUserState();
+                showToast("Đã đăng xuất thành công.");
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = message;
+            toast.classList.remove('translate-x-full', 'opacity-0');
+            toast.classList.add('translate-x-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-x-0', 'opacity-100');
+                toast.classList.add('translate-x-full', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>
